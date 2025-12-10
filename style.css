@@ -1,0 +1,851 @@
+/* =========================
+   ベース & カラーパレット
+   ========================= */
+:root {
+  /* アクセント */
+  --c-lime: #D4ED34;   /* 黄緑：ポイントだけ */
+  --c-purple: #8D8DAA; /* 紫グレー：文字・枠など */
+
+  /* 落ち着いたベースカラー */
+  --c-bg-main: #F7F4F8;
+  --c-bg-soft: #F0EBF3;
+  --c-card: #FFFFFF;
+  --c-muted-pink: #E7C0CC;   /* くすみピンク */
+  --c-muted-rose: #D7A2B4;   /* くすみローズ */
+  --c-border-soft: #E0D4DC;
+
+  --c-text-main: #43353C;
+  --c-text-sub: #857885;
+}
+
+/* リセット & ベーススタイル */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  background:
+    radial-gradient(circle at top left, rgba(212, 237, 52, 0.10) 0, transparent 55%),
+    radial-gradient(circle at bottom right, rgba(141, 141, 170, 0.16) 0, transparent 60%),
+    linear-gradient(135deg, var(--c-bg-main) 0%, var(--c-bg-soft) 40%, var(--c-bg-main) 100%);
+  background-attachment: fixed;
+  min-height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px 24px;
+  padding-top: 40px;
+  color: var(--c-text-main);
+  background: transparent;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+/* コンテナ */
+.container {
+  width: 100%;
+  max-width: 720px;
+  position: relative;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  position: relative;
+}
+
+/* =========================
+   タイピング部分
+   ========================= */
+.typing-section {
+  text-align: center;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards, fadeOut 0.8s ease-out 3.5s forwards;
+}
+
+.typing-title {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(3rem, 8vw, 5.4rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: transparent;
+  background: linear-gradient(120deg, var(--c-purple), var(--c-muted-rose));
+  -webkit-background-clip: text;
+          background-clip: text;
+  text-shadow: 0 4px 14px rgba(143, 125, 155, 0.22);
+}
+
+.typing-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(212, 237, 52, 0.9), transparent);
+  opacity: 0.95;
+}
+
+.cursor {
+  animation: blink 0.7s infinite;
+}
+
+/* =========================
+   お誕生日メッセージ
+   ========================= */
+.birthday-message {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 15;
+  opacity: 0;
+  animation: bounceIn 1s ease-out 4.5s forwards;
+  text-align: center;
+  width: 100%;
+  max-width: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.birthday-text {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 900;
+  color: #FF8B8B;
+  text-shadow: 
+    3px 3px 0px #D4ED34,
+    6px 6px 0px rgba(141, 141, 170, 0.3);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  font-family: 'Arial Black', 'Hiragino Sans', sans-serif;
+}
+
+/* =========================
+   キャラクター画像
+   ========================= */
+.characters-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.character-left {
+  position: relative;
+  pointer-events: auto;
+  z-index: 1;
+  margin-right: -200px;
+}
+
+.character-left .character-img {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+
+.character-right {
+  position: relative;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.character-img {
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  object-fit: none;
+  border: 0 !important;
+  outline: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+  mask-image: linear-gradient(to bottom, 
+    rgba(0, 0, 0, 1) 0%, 
+    rgba(0, 0, 0, 1) 82%, 
+    rgba(0, 0, 0, 0.3) 94%, 
+    rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, 
+    rgba(0, 0, 0, 1) 0%, 
+    rgba(0, 0, 0, 1) 82%, 
+    rgba(0, 0, 0, 0.3) 94%, 
+    rgba(0, 0, 0, 0) 100%);
+  display: block;
+}
+
+.character-img:hover {
+  transform: scale(1.005);
+  filter: saturate(1.02);
+}
+
+.fade-in-character-left,
+.fade-in-character-right {
+  opacity: 0;
+  animation: fadeInUp 0.7s ease-out forwards;
+}
+
+.fade-in-character-left {
+  animation-delay: 6s;
+}
+
+.fade-in-character-right {
+  animation-delay: 6.7s;
+}
+
+/* =========================
+   フォームカード
+   ========================= */
+.form-container {
+  width: 100%;
+  max-width: 480px;
+  background:
+    linear-gradient(135deg, rgba(231, 192, 204, 0.5), rgba(255, 255, 255, 0.98));
+  border-radius: 20px;
+  padding: 32px 36px 28px;
+  border: 1px solid var(--c-border-soft);
+  box-shadow:
+    0 18px 40px rgba(177, 145, 162, 0.20),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+  opacity: 0;
+  margin-top: 330px;
+  position: relative;
+  z-index: 5;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.fade-in-form {
+  animation: fadeInUp 0.7s ease-out 8s forwards;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  color: var(--c-text-main);
+  margin-bottom: 20px;
+}
+
+/* =========================
+   フォーム要素
+   ========================= */
+.message-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--c-text-sub);
+  padding-left: 14px;
+}
+
+/* インプット & テキストエリア */
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--c-border-soft);
+  background-color: #FFFFFF;
+  font-size: 0.98rem;
+  font-family: inherit;
+  line-height: 1.6;
+  color: var(--c-text-main);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    transform 0.1s ease;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #B7A9B3;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--c-purple);
+  box-shadow:
+    0 0 0 1px rgba(212, 237, 52, 0.4),
+    0 12px 28px rgba(188, 171, 196, 0.40);
+  transform: translateY(-1px);
+}
+
+/* =========================
+   送信ボタン
+   ========================= */
+.submit-button {
+  width: 100%;
+  margin-top: 4px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, var(--c-muted-rose), var(--c-purple));
+  color: #FFFFFF;
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow:
+    0 14px 30px rgba(176, 135, 156, 0.35);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 40px rgba(176, 135, 156, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow:
+    0 10px 24px rgba(176, 135, 156, 0.35);
+}
+
+.submit-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* =========================
+   ローディングスピナー
+   ========================= */
+.loading-spinner {
+  display: inline-flex;
+}
+
+.spinner-icon {
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-circle {
+  opacity: 0.18;
+}
+
+.spinner-path {
+  opacity: 0.9;
+}
+
+/* =========================
+   成功・エラーメッセージ
+   ========================= */
+.message {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  text-align: left;
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* 成功メッセージ：やわらかライム */
+.success-message {
+  background: linear-gradient(
+    135deg,
+    rgba(212, 237, 52, 0.16),
+    rgba(247, 244, 248, 0.98)
+  );
+  border: 1px solid rgba(212, 237, 52, 0.7);
+  color: var(--c-text-main);
+}
+
+/* エラー：少しトーンを落としたローズ */
+.error-message {
+  background: linear-gradient(
+    135deg,
+    rgba(215, 162, 180, 0.18),
+    #FFFFFF
+  );
+  border: 1px solid rgba(215, 162, 180, 0.75);
+  color: #914057;
+}
+
+.message-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+  font-size: 1rem;
+  color: var(--c-text-main);
+}
+
+.message-text {
+  margin-bottom: 4px;
+}
+
+.message-subtitle {
+  font-weight: 600;
+  margin: 12px 0 8px;
+}
+
+/* ダウンロードボタン */
+.download-button {
+  margin-top: 4px;
+  padding: 9px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(141, 141, 170, 0.9);
+  background-color: #FFFFFF;
+  color: var(--c-text-sub);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.download-button:hover {
+  background-color: var(--c-purple);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow:
+    0 12px 28px rgba(141, 141, 170, 0.45);
+}
+
+/* ユーティリティ */
+.hidden {
+  display: none !important;
+}
+
+/* =========================
+   アニメーション
+   ========================= */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px) scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(10px) scale(1.05);
+  }
+  70% {
+    transform: translateY(-5px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* =========================
+   レスポンシブ
+   ========================= */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+    padding-top: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .characters-section {
+    gap: 0px;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0 auto;
+  }
+  
+  .content-wrapper {
+    gap: 15px;
+  }
+  
+  .container {
+    max-height: 100vh;
+    overflow: visible;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .content-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .character-img {
+    width: auto;
+    height: auto;
+    max-width: 45vw;
+    max-height: 60vh;
+    object-fit: contain;
+    display: block;
+  }
+
+  .form-container {
+    padding: 24px 20px 20px;
+    border-radius: 18px;
+    margin-top: 240px;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .character-left {
+    margin-right: -50px;
+  }
+  
+  .character-left .character-img {
+    height: 100%;
+    width: auto;
+    display: block;
+  }
+  
+  .character-right {
+    margin-left: 0;
+  }
+  
+  .character-right .character-img {
+    display: block;
+  }
+  
+  .typing-title {
+    font-size: clamp(2.8rem, 8vw, 4rem);
+  }
+  
+  .typing-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .birthday-message {
+    top: 0;
+    max-width: 98%;
+    padding: 0 5px;
+  }
+  
+  .birthday-text {
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    line-height: 1.25;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  
+  .form-title {
+    font-size: 1.15rem;
+  }
+  
+  .content-wrapper {
+    gap: 30px;
+  }
+  
+  .form-textarea {
+    min-height: 90px;
+  }
+  
+  .submit-button {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+
+  .form-title {
+    font-size: 1.35rem;
+  }
+}
+
+/* iPhone 16 / 16 Pro など高解像度スマホ対応 */
+@media (max-width: 430px) {
+  body {
+    padding-top: 15px;
+  }
+  
+  .birthday-message {
+    top: 0;
+  }
+  
+  .birthday-text {
+    font-size: clamp(1.3rem, 4.5vw, 1.9rem);
+    line-height: 1.2;
+  }
+  
+  .characters-section {
+    top: 0;
+  }
+  
+  .character-left {
+    margin-right: -45px;
+  }
+  
+  .character-img {
+    max-width: 43vw;
+    max-height: 55vh;
+  }
+  
+  .form-container {
+    margin-top: 220px;
+  }
+}
+
+/* =========================
+   秘密のボタン
+   ========================= */
+.secret-button-container {
+  width: 100%;
+  max-width: 480px;
+  margin-top: 20px;
+  text-align: center;
+  opacity: 0;
+  animation: fadeInUp 0.7s ease-out 9s forwards;
+}
+
+.secret-button {
+  padding: 10px 24px;
+  border-radius: 999px;
+  border: 1px dashed rgba(141, 141, 170, 0.5);
+  background-color: transparent;
+  color: var(--c-text-sub);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.2s ease;
+  opacity: 0.7;
+}
+
+.secret-button:hover {
+  background-color: rgba(141, 141, 170, 0.08);
+  border-color: rgba(141, 141, 170, 0.8);
+  color: var(--c-purple);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   モーダル
+   ========================= */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  position: relative;
+  width: 95vw;
+  height: 95vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  z-index: 10000;
+  animation: scaleIn 0.3s ease-out;
+}
+
+.modal-image {
+  width: 100%;
+  height: 100%;
+  max-width: 95vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.modal-close {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+.modal-hint {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-align: center;
+  margin-top: 5px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* スマホ対応 */
+@media (max-width: 768px) {
+  .secret-button-container {
+    max-width: 90%;
+  }
+  
+  .modal-content {
+    width: 98vw;
+    height: 98vh;
+  }
+  
+  .modal-image {
+    width: 100%;
+    height: 100%;
+    max-width: 98vw;
+    max-height: 90vh;
+  }
+  
+  .modal-close {
+    top: -45px;
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+  }
+  
+  .modal-hint {
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>メッセージフォーム</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- 追加：少し大人っぽい日本語フォント -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <main class="container">
+    <div class="content-wrapper">
+      <!-- タイピングテキスト -->
+      <div class="typing-section" id="typing-text">
+        <h2 class="typing-title">
+          <span id="typed-text"></span>
+          <span id="cursor" class="cursor">|</span>
+        </h2>
+      </div>
+
+      <!-- お誕生日メッセージ -->
+      <div class="birthday-message" id="birthday-message">
+        <h1 class="birthday-text">12月6日誕生日おめでとう！<br>うぇだすん♡</h1>
+      </div>
+
+      <!-- キャラクター画像 -->
+      <div class="characters-section">
+        <div class="character-left fade-in-character-left">
+          <img src="https://lh3.googleusercontent.com/d/16_2dS8chcND7e5qGDBnBaA6DbbNj6qKQ?v=2" alt="キャラクター1" class="character-img">
+        </div>
+        <div class="character-right fade-in-character-right">
+          <img src="https://lh3.googleusercontent.com/d/1c8RLp8aNOvxnEukVdB74ICu-t9-prl6L?v=2" alt="キャラクター2" class="character-img">
+        </div>
+      </div>
+
+      <!-- フォーム -->
+      <div class="form-container fade-in-form">
+        <h1 class="form-title">プレゼント希望を送信</h1>
+        
+        <form id="message-form" class="message-form">
+          <div class="form-group">
+            <label for="message-input" class="form-label">欲しいプレゼントを入力して送信してね！予算は五千円だよ♪</label>
+            <textarea 
+              id="message-input" 
+              rows="5" 
+              class="form-textarea"
+              placeholder="URLや商品名を入力（予算内で複数可/イラスト・漫画以外）"
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" id="submit-button" class="submit-button">
+            <span id="button-text">神へ送信</span>
+            <span id="loading-spinner" class="loading-spinner hidden">
+              <svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
+          </button>
+        </form>
+
+        <!-- 成功メッセージ -->
+        <div id="success-message" class="message success-message hidden">
+          <p class="message-title">送信完了！</p>
+          <p class="message-text">メッセージが送信されました ♡</p>
+        </div>
+
+        <!-- エラーメッセージ -->
+        <div id="error-message" class="message error-message hidden">
+          <p class="message-title">エラーが発生しました</p>
+          <p class="message-text" id="error-text"></p>
+        </div>
+      </div>
+
+      <!-- 怪しげなボタン -->
+      <div class="secret-button-container">
+        <button id="secret-button" class="secret-button">ここも押してみる…？</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- モーダル -->
+  <div id="image-modal" class="modal hidden">
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close">×</button>
+      <img id="modal-image" src="" alt="プレゼント画像" class="modal-image">
+      <p class="modal-hint">長押しで保存できるよ♡</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
