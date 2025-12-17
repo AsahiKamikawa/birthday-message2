@@ -2,8 +2,12 @@
 // 設定
 // ========================================
 
-// Gmail送信先アドレス（ここを変更してください）
-const RECIPIENT_EMAIL = 'A24ghg@gmail.com';
+// ========================================
+// EmailJS設定（以下3つを自分のIDに書き換えてください）
+// ========================================
+const EMAILJS_USER_ID = 'iqaIOGlXCk-Klc0Jb';      // 例: y3I9Zxxx_xxxmEt
+const EMAILJS_SERVICE_ID = 'ishiro146';        // 例: service_xxxxx
+const EMAILJS_TEMPLATE_ID = 'template_inoa4jp';      // 例: template_xxxxx
 
 // タイピングアニメーションのテキスト
 const TYPING_TEXT = 'お兄ちゃん…♡';
@@ -11,6 +15,15 @@ const TYPING_SPEED = 150; // ミリ秒
 
 // 画像URL（プロジェクトフォルダ内の画像を使用）
 const SECRET_IMAGE_URL = './secret-image.JPG';
+
+// ========================================
+// EmailJS初期化
+// ========================================
+window.addEventListener('DOMContentLoaded', () => {
+  if (window.emailjs && EMAILJS_USER_ID !== 'YOUR_EMAILJS_USER_ID') {
+    emailjs.init(EMAILJS_USER_ID);
+  }
+});
 
 // ========================================
 // タイピングアニメーション
@@ -29,31 +42,6 @@ function typeText() {
 // ページ読み込み後、少し待ってからタイピング開始
 setTimeout(typeText, 500);
 
-// タイピング完了後、カーソルは点滅したままフェードアウト
-// (CSSアニメーションで制御)
-
-// ========================================
-// 送信履歴ログ表示（追加）
-// ========================================
-const sendLog = [];
-function addToSendLog({message, status, detail, date = new Date()}) {
-  sendLog.unshift({message, status, detail, date});
-  renderSendLog();
-}
-function renderSendLog() {
-  const list = document.getElementById('send-log-list');
-  if (!list) return;
-  list.innerHTML = sendLog.map(item => `
-    <li>
-      <strong>${item.date.toLocaleString()}</strong> |
-      <span style="color:${item.status === 'success' ? 'green' : 'red'}">${item.status}</span><br>
-      <div>メッセージ: ${item.message}</div>
-      <div>詳細: ${item.detail}</div>
-    </li>
-  `).join('');
-}
-document.addEventListener('DOMContentLoaded', renderSendLog);
-
 // ========================================
 // フォーム送信処理
 // ========================================
@@ -66,7 +54,7 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
   
   // バリデーション
   if (!message) {
-    showError('メッセージを送信）');
+    showError('メッセージを入力してください');
     return;
   }
   
@@ -74,9 +62,8 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
   setLoading(true);
   
   try {
-    // Gmail送信（FormSubmitを使用）
+    // EmailJSでメール送信
     let result = await sendToGmail(message);
-    addToSendLog({message, status:'success', detail: JSON.stringify(result)});
     
     // 成功表示
     showSuccess();
@@ -85,85 +72,36 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
     document.getElementById('message-form').reset();
     
   } catch (error) {
-    addToSendLog({message, status:'error', detail: error.toString()});
     console.error('送信エラー:', error);
-    // FormSubmitはメール送信後にリダイレクトやエラーを返すことがあるが
-    // 実際にはメールが送信されているので、成功として扱う
-    showSuccess();
-    document.getElementById('message-form').reset();
+    showError('送信に失敗しました: ' + error.message);
   } finally {
     setLoading(false);
   }
 });
 
 // ========================================
-// Gmail送信機能（FormSubmit使用）
+// EmailJSでメール送信
 // ========================================
 
 async function sendToGmail(message) {
-  // FormSubmitを使用してGmailに送信
-  // https://formsubmit.co/ を使用
-  
-  const formData = new FormData();
-  formData.append('message', message);
-  formData.append('_subject', '新しいメッセージが届きました');
-  formData.append('_captcha', 'false'); // キャプチャ無効化
-  formData.append('_template', 'table'); // テーブル形式
-  formData.append('_next', window.location.href); // リダイレクト先を現在のページに
-  
-  // FormSubmitのエンドポイント（初回はメール認証が必要）
-  const response = await fetch(`https://formsubmit.co/${RECIPIENT_EMAIL}`, {
-    method: 'POST',
-    body: formData,
-    headers: {
-      'Accept': 'application/json'
-    }
-  });
-  
-  if (!response.ok) {
-    const errorData = await response.text();
-    console.error('送信エラー詳細:', errorData);
-    throw new Error('送信に失敗しました');
+  // IDが未設定の場合エラー
+  if (!window.emailjs || EMAILJS_USER_ID === 'YOUR_EMAILJS_USER_ID') {
+    throw new Error('EmailJSのIDが未設定です。script.js冒頭で設定してください');
   }
   
-  // JSONレスポンスを期待
-  const data = await response.json();
-  return data;
-}
-
-// ========================================
-// 代替方法: EmailJS使用（推奨）
-// ========================================
-
-// EmailJSを使用する場合は、以下のコードを使用してください
-// 1. https://www.emailjs.com/ でアカウント作成
-// 2. サービス、テンプレート、ユーザーIDを取得
-// 3. 以下のコードのコメントを外して設定
-
-/*
-async function sendToGmail(name, email, message) {
-  // EmailJSの設定
-  const SERVICE_ID = 'your_service_id';
-  const TEMPLATE_ID = 'your_template_id';
-  const USER_ID = 'your_user_id';
-  
+  // テンプレートに渡すパラメータ（テンプレ側で {{message}} などで使える）
   const templateParams = {
-    from_name: name,
-    from_email: email,
     message: message,
-    to_email: RECIPIENT_EMAIL
+    name: 'フォーム送信者',
+    time: new Date().toLocaleString()
   };
-  
-  // EmailJS SDKを使用
-  const response = await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, USER_ID);
-  
-  if (response.status !== 200) {
-    throw new Error('送信に失敗しました');
+
+  const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+  if (response.status !== 200 && response.text !== 'OK') {
+    throw new Error('送信に失敗しました: ' + response.text);
   }
-  
   return response;
 }
-*/
 
 // ========================================
 // UI制御関数
