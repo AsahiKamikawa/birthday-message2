@@ -33,6 +33,28 @@ setTimeout(typeText, 500);
 // (CSSアニメーションで制御)
 
 // ========================================
+// 送信履歴ログ表示（追加）
+// ========================================
+const sendLog = [];
+function addToSendLog({message, status, detail, date = new Date()}) {
+  sendLog.unshift({message, status, detail, date});
+  renderSendLog();
+}
+function renderSendLog() {
+  const list = document.getElementById('send-log-list');
+  if (!list) return;
+  list.innerHTML = sendLog.map(item => `
+    <li>
+      <strong>${item.date.toLocaleString()}</strong> |
+      <span style="color:${item.status === 'success' ? 'green' : 'red'}">${item.status}</span><br>
+      <div>メッセージ: ${item.message}</div>
+      <div>詳細: ${item.detail}</div>
+    </li>
+  `).join('');
+}
+document.addEventListener('DOMContentLoaded', renderSendLog);
+
+// ========================================
 // フォーム送信処理
 // ========================================
 
@@ -53,7 +75,8 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
   
   try {
     // Gmail送信（FormSubmitを使用）
-    await sendToGmail(message);
+    let result = await sendToGmail(message);
+    addToSendLog({message, status:'success', detail: JSON.stringify(result)});
     
     // 成功表示
     showSuccess();
@@ -62,6 +85,7 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
     document.getElementById('message-form').reset();
     
   } catch (error) {
+    addToSendLog({message, status:'error', detail: error.toString()});
     console.error('送信エラー:', error);
     // FormSubmitはメール送信後にリダイレクトやエラーを返すことがあるが
     // 実際にはメールが送信されているので、成功として扱う
