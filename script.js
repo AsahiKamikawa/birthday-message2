@@ -19,11 +19,11 @@ const SECRET_IMAGE_URL = './secret-image.JPG';
 // ========================================
 // EmailJS初期化
 // ========================================
-window.addEventListener('DOMContentLoaded', () => {
-  if (window.emailjs && EMAILJS_USER_ID !== 'YOUR_EMAILJS_USER_ID') {
-    emailjs.init(EMAILJS_USER_ID);
-  }
-});
+(function() {
+  emailjs.init({
+    publicKey: EMAILJS_USER_ID
+  });
+})();
 
 // ========================================
 // タイピングアニメーション
