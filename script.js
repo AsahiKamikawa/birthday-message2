@@ -84,11 +84,6 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
 // ========================================
 
 async function sendToGmail(message) {
-  // IDが未設定の場合エラー
-  if (!window.emailjs || EMAILJS_USER_ID === 'YOUR_EMAILJS_USER_ID') {
-    throw new Error('EmailJSのIDが未設定です。script.js冒頭で設定してください');
-  }
-  
   // テンプレートに渡すパラメータ（テンプレ側で {{message}} などで使える）
   const templateParams = {
     message: message,
@@ -97,9 +92,6 @@ async function sendToGmail(message) {
   };
 
   const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
-  if (response.status !== 200 && response.text !== 'OK') {
-    throw new Error('送信に失敗しました: ' + response.text);
-  }
   return response;
 }
 
