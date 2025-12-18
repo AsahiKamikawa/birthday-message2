@@ -5,8 +5,8 @@
 // ========================================
 // EmailJS設定（以下3つを自分のIDに書き換えてください）
 // ========================================
-const EMAILJS_USER_ID = 'iqaIOGlXCk-Klc0Jb';      // 例: y3I9Zxxx_xxxmEt
-const EMAILJS_SERVICE_ID = 'ishiro146';        // 例: service_xxxxx
+const EMAILJS_USER_ID = 'Wicdadd_udnDWB4Bm';      // 例: y3I9Zxxx_xxxmEt
+const EMAILJS_SERVICE_ID = 'service_13a7ocn';        // 例: service_xxxxx
 const EMAILJS_TEMPLATE_ID = 'template_inoa4jp';      // 例: template_xxxxx
 
 // タイピングアニメーションのテキスト
