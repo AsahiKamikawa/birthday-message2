@@ -3,11 +3,11 @@
 // ========================================
 
 // ========================================
-// EmailJS設定（以下3つを自分のIDに書き換えてください）
+// Google Apps Script設定
 // ========================================
-const EMAILJS_USER_ID = 'Wicdadd_udnDWB4Bm';      // 例: y3I9Zxxx_xxxmEt
-const EMAILJS_SERVICE_ID = 'service_13a7ocn';        // 例: service_xxxxx
-const EMAILJS_TEMPLATE_ID = 'template_inoa4jp';      // 例: template_xxxxx
+// Google Apps ScriptのWebアプリURLをここに貼り付けてください
+// 例: https://script.google.com/macros/s/AKfycby.../exec
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTSLGIl9EUFQBC5cK3N10nEm1unNtOoxgGMMZHusK99aZcG5aN34M2fC12CpNGteJM/exec';
 
 // タイピングアニメーションのテキスト
 const TYPING_TEXT = 'お兄ちゃん…♡';
@@ -17,13 +17,8 @@ const TYPING_SPEED = 150; // ミリ秒
 const SECRET_IMAGE_URL = './secret-image.JPG';
 
 // ========================================
-// EmailJS初期化
+// Google Apps Script初期化（不要なため削除）
 // ========================================
-(function() {
-  emailjs.init({
-    publicKey: EMAILJS_USER_ID
-  });
-})();
 
 // ========================================
 // タイピングアニメーション
@@ -62,8 +57,8 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
   setLoading(true);
   
   try {
-    // EmailJSでメール送信
-    let result = await sendToGmail(message);
+    // Googleスプレッドシートに保存
+    let result = await saveToSpreadsheet(message);
     
     // 成功表示
     showSuccess();
@@ -80,19 +75,33 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
 });
 
 // ========================================
-// EmailJSでメール送信
+// Googleスプレッドシートに保存
 // ========================================
 
-async function sendToGmail(message) {
-  // テンプレートに渡すパラメータ（テンプレ側で {{message}} などで使える）
-  const templateParams = {
-    message: message,
-    name: 'フォーム送信者',
-    time: new Date().toLocaleString()
-  };
-
-  const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
-  return response;
+async function saveToSpreadsheet(message) {
+  // Google Apps ScriptのWebアプリにPOSTリクエストを送信
+  const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message: message
+    })
+  });
+  
+  // レスポンスを確認
+  if (!response.ok) {
+    throw new Error(`HTTPエラー: ${response.status}`);
+  }
+  
+  const result = await response.json();
+  
+  if (!result.success) {
+    throw new Error(result.error || '保存に失敗しました');
+  }
+  
+  return result;
 }
 
 // ========================================
