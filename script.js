@@ -8,6 +8,7 @@
 // Google Apps ScriptのWebアプリURLをここに貼り付けてください
 // 例: https://script.google.com/macros/s/AKfycby.../exec
 const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTSLGIl9EUFQBC5cK3N10nEm1unNtOoxgGMMZHusK99aZcG5aN34M2fC12CpNGteJM/exec';
+const ENABLE_DEBUG_OVERLAY = true; // 一時的な画面ログ表示用（不要になったらfalse）
 
 // タイピングアニメーションのテキスト
 const TYPING_TEXT = 'お兄ちゃん…♡';
@@ -19,6 +20,50 @@ const SECRET_IMAGE_URL = './secret-image.JPG';
 // ========================================
 // Google Apps Script初期化（不要なため削除）
 // ========================================
+
+// ========================================
+// 簡易ログ表示オーバーレイ（デバッグ用）
+// ========================================
+function initDebugOverlay() {
+  if (!ENABLE_DEBUG_OVERLAY || document.getElementById('debug-log')) return;
+  const box = document.createElement('div');
+  box.id = 'debug-log';
+  box.style.position = 'fixed';
+  box.style.bottom = '10px';
+  box.style.left = '10px';
+  box.style.right = '10px';
+  box.style.maxHeight = '40vh';
+  box.style.overflowY = 'auto';
+  box.style.background = 'rgba(0,0,0,0.8)';
+  box.style.color = '#0f0';
+  box.style.fontSize = '12px';
+  box.style.padding = '8px';
+  box.style.zIndex = '9999';
+  box.style.whiteSpace = 'pre-wrap';
+  box.style.fontFamily = 'monospace';
+  document.body.appendChild(box);
+}
+
+function logToScreen(msg) {
+  if (!ENABLE_DEBUG_OVERLAY) return;
+  const box = document.getElementById('debug-log');
+  if (!box) return;
+  const now = new Date().toISOString();
+  const line = `[${now}] ${msg}`;
+  const p = document.createElement('div');
+  p.textContent = line;
+  box.appendChild(p);
+}
+
+window.addEventListener('error', (e) => {
+  initDebugOverlay();
+  logToScreen(`Error: ${e.message}`);
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+  initDebugOverlay();
+  logToScreen(`Promise rejection: ${e.reason}`);
+});
 
 // ========================================
 // タイピングアニメーション
@@ -43,6 +88,7 @@ setTimeout(typeText, 500);
 
 document.getElementById('message-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+  initDebugOverlay();
   
   // 入力値を取得
   const message = document.getElementById('message-input').value.trim();
@@ -50,6 +96,7 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
   // バリデーション
   if (!message) {
     showError('メッセージを入力してください');
+    logToScreen('Validation failed: empty message');
     return;
   }
   
@@ -59,6 +106,7 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
   try {
     // Googleスプレッドシートに保存
     let result = await saveToSpreadsheet(message);
+    logToScreen('saveToSpreadsheet success');
     
     // 成功表示
     showSuccess();
@@ -68,6 +116,7 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
     
   } catch (error) {
     console.error('送信エラー:', error);
+    logToScreen(`送信エラー: ${error.message || error}`);
     showError('送信に失敗しました: ' + error.message);
   } finally {
     setLoading(false);
