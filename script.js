@@ -128,24 +128,41 @@ document.getElementById('message-form').addEventListener('submit', async (e) => 
 // ========================================
 
 async function saveToSpreadsheet(message) {
-  // Google Apps ScriptのWebアプリにPOSTリクエストを送信
-  const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      message: message
-    })
-  });
+  logToScreen(`POST start -> ${GOOGLE_APPS_SCRIPT_URL}`);
+
+  let response;
+  try {
+    // Google Apps ScriptのWebアプリにPOSTリクエストを送信
+    response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: message
+      })
+    });
+  } catch (networkError) {
+    logToScreen(`fetch例外: ${networkError}`);
+    throw new Error(`ネットワークエラー: ${networkError}`);
+  }
   
+  logToScreen(`レスポンス status=${response.status}`);
+
   // レスポンスを確認
   if (!response.ok) {
+    const text = await response.text().catch(() => '');
+    logToScreen(`レスポンス本文: ${text}`);
     throw new Error(`HTTPエラー: ${response.status}`);
   }
   
-  const result = await response.json();
+  const result = await response.json().catch((e) => {
+    logToScreen(`JSONパース失敗: ${e}`);
+    throw new Error('レスポンスのJSON解析に失敗しました');
+  });
   
+  logToScreen(`結果: ${JSON.stringify(result)}`);
+
   if (!result.success) {
     throw new Error(result.error || '保存に失敗しました');
   }
