@@ -7,7 +7,7 @@
 // ========================================
 // Google Apps ScriptのWebアプリURLをここに貼り付けてください
 // 例: https://script.google.com/macros/s/AKfycby.../exec
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTSLGIl9EUFQBC5cK3N10nEm1unNtOoxgGMMZHusK99aZcG5aN34M2fC12CpNGteJM/exec';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbykAkLV7G7vZcMnznfL1hP6hMJV7x52-amOvUHcKGLEZu7PnRMzDLvwIyyzF7R8290U/exec';
 const ENABLE_DEBUG_OVERLAY = false; // 一時的な画面ログ表示用（不要になったらfalse）
 
 // タイピングアニメーションのテキスト
@@ -232,4 +232,3 @@ document.addEventListener('keydown', (e) => {
     closeModal();
   }
 });
-
